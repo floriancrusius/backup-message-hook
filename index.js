@@ -1,11 +1,13 @@
 require("dotenv").config();
-const { getEnv, emptyBackupMessage, timestamp } = require("./helper");
+const { getEnv, emptyBackupMessage, TimeStamp } = require("./helper");
 const cron = require("node-cron");
 const Webhook = require("./services/webhook");
 const { generateImage } = require("./services/imageGenerator");
 const { sendFileToSlack, postToSlack } = require("./services/slack");
+
 const { CRON_TIME, SECRET, PORT } = getEnv();
 
+const ts = new TimeStamp();
 const webhook = new Webhook(SECRET, PORT);
 webhook.start();
 cron.schedule(CRON_TIME, () => {
@@ -16,16 +18,16 @@ cron.schedule(CRON_TIME, () => {
         sendFileToSlack(image)
           .then((res) => {
             if (res.statusText === "OK") {
-              timestamp("Backup messages sent to slack");
+              ts.info("Backup messages sent to slack");
             }
           })
           .catch((err) => {
-            timestamp(err, "error");
+            ts.error(err);
           });
       })
-      .catch((err) => timestamp(err, "error"));
+      .catch((err) => ts(err));
   } else {
-    timestamp("No backup messages received");
+    ts.info("No backup messages received");
     postToSlack(emptyBackupMessage);
   }
 });

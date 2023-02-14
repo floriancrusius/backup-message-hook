@@ -1,8 +1,8 @@
 const fs = require("fs");
 const axios = require("axios");
 const path = require("path");
-const { timestamp } = require("../helper");
-
+const { TimeStamp } = require("../helper");
+const ts = new TimeStamp();
 const channels = process.env.SLACK_CHANNEL_ID;
 const SlackClient = axios.create({
   baseURL: "https://slack.com/api",
@@ -15,16 +15,14 @@ const SlackClient = axios.create({
 const sendFileToSlack = async (data) =>
   await new Promise((resolve, reject) => {
     if (!process.env.SLACK_SECRET) {
-      timestamp(
-        "No slack secret found. Please set the SLACK_SECRET environment variable.",
-        "error"
+      ts.error(
+        "No slack secret found. Please set the SLACK_SECRET environment variable."
       );
       process.exit(-3);
     }
     if (!process.env.SLACK_CHANNEL_ID) {
-      timestamp(
-        "No slack channel id found. Please set the SLACK_CHANNEL_ID environment variable.",
-        "error"
+      ts.error(
+        "No slack channel id found. Please set the SLACK_CHANNEL_ID environment variable."
       );
       process.exit(-3);
     }
@@ -51,21 +49,19 @@ const sendFileToSlack = async (data) =>
 const sendFileFromPathToSlack = async (filePath) =>
   await new Promise((resolve, reject) => {
     if (!process.env.SLACK_SECRET) {
-      timestamp(
-        "No slack secret found. Please set the SLACK_SECRET environment variable.",
-        "error"
+      ts.error(
+        "No slack secret found. Please set the SLACK_SECRET environment variable."
       );
       process.exit(-3);
     }
     if (!process.env.SLACK_CHANNEL_ID) {
-      timestamp(
-        "No slack channel id found. Please set the SLACK_CHANNEL_ID environment variable.",
-        "error"
+      ts.error(
+        "No slack channel id found. Please set the SLACK_CHANNEL_ID environment variable."
       );
       process.exit(-3);
     }
     if (!fs.existsSync(filePath)) {
-      timestamp("File not found", "error");
+      ts.error("File not found");
       process.exit(-3);
     }
     const file = new fs.createReadStream(filePath);

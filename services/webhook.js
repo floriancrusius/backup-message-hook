@@ -1,6 +1,7 @@
 const http = require("http");
 const crypto = require("crypto");
-const { timestamp } = require("../helper");
+const { TimeStamp } = require("../helper");
+const ts = new TimeStamp();
 class Webhook {
   constructor(secret, port) {
     this.backups = [];
@@ -48,7 +49,7 @@ class Webhook {
         res.end();
       })
       .listen(this.PORT, () => {
-        timestamp(`Server started on port ${this.PORT}`);
+        ts.info(`Server started on port ${this.PORT}`);
       });
   }
   getBackups() {
