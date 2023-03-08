@@ -21,7 +21,11 @@ class Webhook {
 
           const body = JSON.parse(chunk);
           if (isAllowed) {
-            ts.info(`Received backup message from ${req.headers.host}`);
+            ts.info(
+              `Received backup message from ${
+                req.socket.remoteAddress || "unknown"
+              }`
+            );
             if (this.backups.length) {
               let found = false;
               this.backups.map((backup) => {
@@ -45,7 +49,11 @@ class Webhook {
               this.backups.push(body);
             }
           } else {
-            ts.error(`Unauthorized request from ${req.headers.host}`);
+            ts.error(
+              `Unauthorized request from ${
+                req.socket.remoteAddress || "unknown"
+              }`
+            );
           }
         });
 
