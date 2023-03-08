@@ -103,6 +103,7 @@ const generateImage = async (data) =>
       const html = generateHtml(data);
       nodeHtmlToImage({
         html: html,
+        puppeteerArgs: { args: ["--no-sandbox"] },
       }).then((data) => {
         resolve(data);
       });
