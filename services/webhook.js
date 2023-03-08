@@ -23,7 +23,9 @@ class Webhook {
           if (isAllowed) {
             ts.info(
               `Received backup message from ${
-                req.socket.remoteAddress || "unknown"
+                req.socket.remoteAddress ||
+                req.headers["x-forwarded-for"] ||
+                "-"
               }`
             );
             if (this.backups.length) {
@@ -51,7 +53,9 @@ class Webhook {
           } else {
             ts.error(
               `Unauthorized request from ${
-                req.socket.remoteAddress || "unknown"
+                req.socket.remoteAddress ||
+                req.headers["x-forwarded-for"] ||
+                "-"
               }`
             );
           }
