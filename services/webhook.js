@@ -21,6 +21,7 @@ class Webhook {
 
           const body = JSON.parse(chunk);
           if (isAllowed) {
+            ts.info(`Received backup message from ${req.headers.host}`);
             if (this.backups.length) {
               let found = false;
               this.backups.map((backup) => {
@@ -43,6 +44,8 @@ class Webhook {
             } else {
               this.backups.push(body);
             }
+          } else {
+            ts.error(`Unauthorized request from ${req.headers.host}`);
           }
         });
 
